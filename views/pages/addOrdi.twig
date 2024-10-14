@@ -1,0 +1,33 @@
+{% extends "../layouts/base.twig" %}
+
+{% block title %}
+	<title>Ajouter un ordinateur</title>
+{% endblock %}
+
+{% block main %}
+	<main class="bg-[rgb(191,167,127)] min-h-screen py-12 px-4">
+		<div class="container mx-auto bg-white rounded-lg shadow-xl p-6">
+			<h1 class="text-4xl font-bold text-black mb-8">Ajouter un ordinateur</h1>
+			<form action="/addOrdi" method="POST" class="space-y-4">
+				<div>
+					<label for="macAdress" class="block text-sm font-medium text-black">Adresse MAC</label>
+					<input type="text" class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2" id="macAdress" name="macAdress" pattern="^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$" required>
+					<p class="mt-1 text-sm text-gray-500">Format: XX:XX:XX:XX:XX:XX (où X est un caractère hexadécimal)</p>
+				</div>
+				
+				<div>
+					<label for="employe" class="block text-sm font-medium text-black">Employé associé (optionnel)</label>
+					<select class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2" id="employe" name="employeId">
+						<option value="">Sélectionnez un employé...</option>
+						{% for employe in employes %}
+							<option value="{{ employe.id }}">{{ employe.firstname }} {{ employe.lastname }}</option>
+						{% endfor %}
+					</select>
+				</div>
+
+				<button type="submit" class="bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Ajouter l'ordinateur</button>
+			</form>
+			<a href="/home" class="mt-4 inline-block bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300">Retourner au tableau de bord</a>
+		</div>
+	</main>
+{% endblock %}

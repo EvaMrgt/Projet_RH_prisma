@@ -1,0 +1,28 @@
+{% extends "../layouts/base.twig" %}
+
+{% if entreprise %}
+	{% block main %}
+	<main class="bg-[rgb(191,167,127)] min-h-screen py-12 px-4">
+		<div class="container mx-auto bg-white rounded-lg shadow-xl p-6">
+			<h1 class="text-4xl font-bold text-black mb-8">Créer une nouvelle tâche</h1>
+			<form action="/addTache" method="POST" class="space-y-4">
+				<div>
+					<label for="description" class="block text-sm font-medium text-black">Description</label>
+					<textarea class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2" id="description" name="description" required></textarea>
+				</div>
+
+				<div>
+					<label for="dateLimit" class="block text-sm font-medium text-black">Date limite</label>
+					<input type="date" class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2" id="dateLimit" name="dateLimit" required>
+				</div>
+				<button type="submit" class="bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Créer la tâche</button>
+			</form>
+			<a href="/home" class="mt-4 inline-block bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300">Retourner au tableau de bord</a>
+		</div>
+	</main>
+{% endblock %}
+{% else %}
+	{% block main %}
+	<p>non</p>
+	{% endblock %}
+{% endif %}

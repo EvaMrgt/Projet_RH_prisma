@@ -1,0 +1,7 @@
+model Ordinateur {
+    id           Int        @id @default(autoincrement())
+    macAdress    String     @unique @db.VarChar(17)
+    employe      Employe?
+    entreprise   Entreprise @relation(fields: [entrepriseId], references: [id])
+    entrepriseId Int
+}

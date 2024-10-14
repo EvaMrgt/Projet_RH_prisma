@@ -1,0 +1,11 @@
+model Tache {
+  id           Int        @id @default(autoincrement())
+  description  String
+  deadline     DateTime
+  completed    Boolean    @default(false)
+  entreprise   Entreprise @relation(fields: [entrepriseId], references: [id])
+  entrepriseId Int
+  employeId    Int?
+  employes     Employe? @relation(fields: [employeId], references: [id])
+  fichierPath  String?
+}

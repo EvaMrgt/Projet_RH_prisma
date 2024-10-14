@@ -1,0 +1,183 @@
+{% extends "../layouts/base.twig" %}
+
+{% block title %}
+	<title>Tableau de Bord Entreprise</title>
+{% endblock %}
+
+{% block main %}
+	<main class="bg-[rgb(191,167,127)] min-h-screen py-12 px-4">
+		<div class="container mx-auto">
+			<h1 class="text-4xl font-bold text-black mb-8">Tableau de Bord Entreprise</h1>
+			<!-- Section Employés -->
+			<section class="bg-white rounded-lg shadow-xl p-4 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Employés</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+					{% for employe in employes %}
+						<div
+							class="border border-[rgb(191,167,127)] p-3 rounded-lg flex flex-col items-center">
+							<!-- Photo de l'employé -->
+							<div class="mb-2">
+								{% if employe.photo %}
+									<img src="{{ employe.photo }}?v={{ 'now'|date('U') }}" alt="Photo de {{ employe.firstname }}" class="w-24 h-24 object-cover rounded-full">
+								{% else %}
+									<div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center">
+										<span class="text-gray-600 text-xl">{{ employe.firstname|first }}{{ employe.lastname|first }}</span>
+									</div>
+								{% endif %}
+							</div>
+							<!-- Informations de l'employé -->
+							<div class="text-center">
+								<h3 class="font-semibold">{{ employe.firstname }}
+									{{ employe.lastname }}</h3>
+								<p class="text-sm">{{ employe.mail }}</p>
+								<p class="text-sm">Poste:
+									{{ employe.fonction }}</p>
+							</div>
+							<!-- Tâches et blâmes -->
+							<div class="text-center mt-2 text-sm">
+								<p>Tâches :
+									{% for tache in employe.taches %}
+										{{ tache.description }}
+										{% if not loop.last %},
+										{% endif %}
+									{% else %}
+										Aucune
+									{% endfor %}
+								</p>
+								<p>Blâmes :
+									{% for blame in employe.blames %}
+										{{ blame.description }}
+										{% if not loop.last %},
+										{% endif %}
+									{% else %}
+										Aucun
+									{% endfor %}
+								</p>
+							</div>
+							<!-- Actions -->
+							<div class="mt-2 text-center">
+								<a href="/editEmploye/{{ employe.id }}" class="text-blue-600 hover:underline text-sm mr-2">Modifier</a>
+								<a href="/deleteEmploye/{{ employe.id }}" class="text-red-600 hover:underline text-sm mr-2" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">Supprimer</a>
+								<a href="/addBlame" class="text-yellow-600 hover:underline text-sm">Blâmer</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<a href="/addEmploye" class="mt-4 inline-block bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Ajouter un employé</a>
+			</section>
+
+			<!-- Section Ordinateurs -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Ordinateurs</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					{% for ordinateur in ordinateurs %}
+						<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+							<h3 class="font-semibold">Ordinateur ID:
+								{{ ordinateur.id }}</h3>
+							<p>Adresse MAC:
+								{{ ordinateur.macAdress }}</p>
+							<p>Utilisateur:
+								{% if ordinateur.employe %}
+									{{ ordinateur.employe.firstname }}
+									{{ ordinateur.employe.lastname }}
+								{% else %}
+									Non assigné
+								{% endif %}
+							</p>
+							<div class="mt-2">
+								<a href="/deleteOrdi/{{ ordinateur.id }}" class="text-red-600 hover:underline" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet ordinateur ?');">Supprimer</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<a href="/addOrdi" class="mt-4 inline-block bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Ajouter un ordinateur</a>
+			</section>
+
+			<!-- Section Association Employé-Ordinateur -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Associer un Employé à un Ordinateur</h2>
+				<form action="/assignOrdinateur" method="post" class="space-y-4">
+					<div>
+						<label for="employe" class="block text-sm font-medium text-black">Employé</label>
+						<select id="employe" name="employeId" required class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2">
+							<option value="">Sélectionner un employé</option>
+							{% for employe in employes %}
+								<option value="{{ employe.id }}">{{ employe.firstname }}{{ employe.lastname }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div>
+						<label for="computer" class="block text-sm font-medium text-black">Ordinateur</label>
+						<select id="computer" name="ordinateurId" required class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2">
+							<option value="">Sélectionner un ordinateur</option>
+							{% for ordinateur in ordinateurs %}
+								<option value="{{ ordinateur.id }}">{{ ordinateur.id }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button class="bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Associer</button>
+				</form>
+			</section>
+
+			<!-- Nouvelle Section : Tâches -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Tâches</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					{% for tache in taches %}
+						<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+							<h3 class="font-semibold">{{ tache.description }}</h3>
+							<p>Date limite :
+								{{ tache.deadline|date('d/m/Y H:i') }}</p>
+							<p>Statut :
+								{% if tache.completed %}Terminée{% else %}En cours
+								{% endif %}
+							</p>
+							<p>Assignée à :
+								{% if tache.employes %}
+									{{ tache.employes.firstname }}
+									{{ tache.employes.lastname }}
+									(ID:
+									{{ tache.employeId }})
+								{% else %}
+									Non assignée
+								{% endif %}
+							</p>
+							<div class="mt-2">
+								<a href="/editTache/{{ tache.id }}" class="text-blue-600 hover:underline mr-2">Modifier</a>
+								<a href="/deleteTache/{{ tache.id }}" class="text-red-600 hover:underline">Supprimer</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+				<a href="/addTache" class="mt-4 inline-block bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Ajouter une tâche</a>
+			</section>
+
+			<!-- Association Employé-Tâche -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mt-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Assigner une Tâche à un Employé</h2>
+				<form action="/assignTache" method="post" class="space-y-4">
+					<div>
+						<label for="employeTache" class="block text-sm font-medium text-black">Employé</label>
+						<select id="employeTache" name="employeId" required class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2">
+							<option value="">Sélectionner un employé</option>
+							{% for employe in employes %}
+								<option value="{{ employe.id }}">{{ employe.firstname }}
+									{{ employe.lastname }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div>
+						<label for="tache" class="block text-sm font-medium text-black">Tâche</label>
+						<select id="tache" name="taches" required class="mt-1 block w-full border border-[rgb(191,167,127)] rounded-md shadow-sm focus:ring focus:ring-[rgb(191,167,127)] focus:border-[rgb(191,167,127)] p-2">
+							<option value="">Sélectionner une tâche</option>
+							{% for tache in taches %}
+								<option value="{{ tache.id }}">{{ tache.description }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button class="bg-[rgb(191,167,127)] text-black py-2 px-4 rounded hover:bg-[rgba(191,167,127,.8)]">Assigner la Tâche</button>
+				</form>
+			</section>
+		</div>
+	</main>
+{% endblock %}

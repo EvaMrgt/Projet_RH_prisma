@@ -1,0 +1,40 @@
+<header class="bg-[rgb(191,167,127)] text-black shadow-md">
+	<div class="container mx-auto px-4 py-3 flex justify-between items-center">
+		<div class="flex items-center space-x-3">
+			<img src="../assets/imgs/logo.png" alt="logo" class="h-10 w-auto">
+			<span class="text-xl font-semibold text-black">Big Boss</span>
+		</div>
+		<nav>
+			<ul class="flex space-x-6">
+				{% if entreprise %}
+					<li>
+						<a href="/" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Accueil</a>
+					</li>
+					<li>
+						<a href="/addTache" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Ajouter une tâches</a>
+					</li>
+					<li>
+						<a href="/logout" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Déconnexion</a>
+					</li>
+				{% elseif employe %}
+					<li>
+						<a href="/logout" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Déconnexion</a>
+					</li>
+				{% else %}
+					<li>
+						<a href="/" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Accueil</a>
+					</li>
+					<li>
+						<a href="/register" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Insctiption</a>
+					</li>
+					<li>
+						<a href="/login" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Connexion Entreprise</a>
+					</li>
+					<li>
+						<a href="/loginEmploye" class="text-black hover:text-[rgba(0,0,0,0.7)] transition duration-300 font-medium">Connexion Employe</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
+	</div>
+</header>

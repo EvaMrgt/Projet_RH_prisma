@@ -1,0 +1,64 @@
+{% extends "../layouts/base.twig" %}
+
+{% block title %}
+	<title>{{ title }}</title>
+{% endblock %}
+
+{% block main %}
+	<main class="container mx-auto mt-8 p-4">
+		<h1 class="text-3xl font-bold mb-6">{{ title }}</h1>
+
+		<!-- Formulaire pour ajouter un blâme -->
+		<div class="mb-8 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+			<h2 class="text-2xl font-semibold mb-4">Ajouter un nouveau blâme</h2>
+			<form action="/addBlame" method="POST" class="space-y-4">
+				<div>
+					<label for="employeId" class="block text-gray-700 text-sm font-bold mb-2">Employé</label>
+					<select name="employeId" id="employeId" required class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+						<option value="">Sélectionnez un employé</option>
+						{% for employe in employes %}
+							<option value="{{ employe.id }}">{{ employe.firstname }}
+								{{ employe.lastname }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div>
+					<label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description du blâme</label>
+					<textarea name="description" id="description" rows="3" required class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Décrivez le blâme ici..."></textarea>
+				</div>
+				<div>
+					<button class="bg-[rgb(191,167,127)] hover:bg-[rgba(191,167,127,.8)] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+						Ajouter le blâme
+					</button>
+				</div>
+			</form>
+			<a href="/" class="mt-4 inline-block bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300">Retourner au tableau de bord</a>
+		</div>
+
+		<!-- Liste des blâmes existants -->
+		<div>
+			<h2 class="text-2xl font-semibold mb-4">Blâmes existants</h2>
+			{% if blames|length > 0 %}
+				<ul class="space-y-4">
+					{% for blame in blames %}
+						<li class="bg-white shadow-md rounded px-8 py-4">
+							<p class="font-bold">Employé :
+								{{ blame.employe.firstname }}
+								{{ blame.employe.lastname }}</p>
+							<p class="text-sm text-gray-600">Date :
+								{{ blame.date|date('d/m/Y H:i') }}</p>
+							<p class="mt-2">{{ blame.description }}</p>
+							<div class="mt-4">
+								<a href="/deleteBlame/{{ blame.id }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+									Supprimer
+								</a>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p class="text-gray-600">Aucun blâme n'a été enregistré pour le moment.</p>
+			{% endif %}
+		</div>
+	</main>
+{% endblock %}

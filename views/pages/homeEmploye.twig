@@ -1,0 +1,99 @@
+{% extends "../layouts/base.twig" %}
+
+{% block title %}
+	<title>Tableau de Bord Employé</title>
+{% endblock %}
+
+{% block main %}
+	<main class="bg-[rgb(191,167,127)] min-h-screen py-12 px-4">
+		<div class="container mx-auto">
+			<h1 class="text-4xl font-bold text-black mb-8">Tableau de Bord Employé</h1>
+
+			<!-- Informations de l'employé -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Mes Informations</h2>
+				<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+					<div class="flex items-center mb-4">
+						{% if employe.photo %}
+							<img src="{{ employe.photo }}?v={{ 'now'|date('U') }}" alt="Photo de {{ employe.firstname }}" class="w-24 h-24 object-cover rounded-full mr-4">
+						{% else %}
+							<div class="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center mr-4">
+								<span class="text-2xl text-gray-600">{{ employe.firstname|first }}{{ employe.lastname|first }}</span>
+							</div>
+						{% endif %}
+						<div>
+							<h3 class="font-semibold">{{ employe.firstname }}
+								{{ employe.lastname }}</h3>
+							<p>Email:
+								{{ employe.mail }}</p>
+							<p>Fonction:
+								{{ employeFunction }}</p>
+							<p>Entreprise:
+								{{ entrepriseName }}</p>
+						</div>
+					</div>
+					<a href="/editProfile/{{ employe.id }}" class="text-blue-500 hover:text-blue-700">Modifier mon profil</a>
+				</div>
+			</section>
+
+			<!-- Ordinateur de l'employé -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Mon Ordinateur</h2>
+				{% if employe.ordinateur %}
+					<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+						<h3 class="font-semibold">Ordinateur ID:
+							{{ employe.ordinateur.id }}</h3>
+						<p>Adresse MAC:
+							{{ employe.ordinateur.macAdress }}</p>
+					</div>
+				{% else %}
+					<p>Aucun ordinateur assigné.</p>
+				{% endif %}
+			</section>
+
+			<!-- Tâches de l'employé -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Mes Tâches</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					{% for tache in taches %}
+						<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+							<h3 class="font-semibold">{{ tache.description }}</h3>
+							<p>Date limite :
+								{{ tache.deadline|date('d/m/Y H:i') }}</p>
+							<p>Statut :
+								{% if tache.completed %}
+									Terminée
+								{% else %}
+									En cours
+									<form action="/taches/{{ tache.id }}/complete" method="POST">
+										<button type="submit" class="mt-2 bg-green-500 text-white py-1 px-2 rounded hover:bg-green-600">
+											Marquer comme terminée
+										</button>
+									</form>
+								{% endif %}
+							</p>
+						</div>
+					{% else %}
+						<p>Aucune tâche assignée.</p>
+					{% endfor %}
+				</div>
+			</section>
+
+			<!-- Blâmes de l'employé -->
+			<section class="bg-white rounded-lg shadow-xl p-6 mb-8">
+				<h2 class="text-2xl font-bold text-black mb-4">Mes Blâmes</h2>
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+					{% for blame in blames %}
+						<div class="border border-[rgb(191,167,127)] p-4 rounded-lg">
+							<h3 class="font-semibold">Blâme du
+								{{ blame.date|date('d/m/Y') }}</h3>
+							<p>{{ blame.description }}</p>
+						</div>
+					{% else %}
+						<p>Aucun blâme reçu.</p>
+					{% endfor %}
+				</div>
+			</section>
+		</div>
+	</main>
+{% endblock %}
